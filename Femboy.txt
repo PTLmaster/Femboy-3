@@ -23,7 +23,7 @@ local state = {
     distance = true,
     bones = true,
     chams = true, 
-    enemyOnly = true, 
+    enemyOnly = true, -- [cite: 208, 209]
     
     -- Aimbot
     aimbot = true,
@@ -31,7 +31,7 @@ local state = {
     fovEnabled = true,
     fovRadius = 150,
     wallCheck = true,
-    smoothing = 1,
+    smoothing = 1, -- [cite: 209]
     
     -- Movement
     speedEnabled = false,
@@ -39,7 +39,10 @@ local state = {
     speedKey = Enum.KeyCode.LeftShift,
     isBindingSpeed = false,
     speedMode = "Hold", -- "Hold" or "Toggle"
-    speedToggled = false,
+    speedToggled = false, -- [cite: 209]
+
+    -- Bunny Hop
+    bhopEnabled = false,
 
     -- Fly Hack
     flyEnabled = false,
@@ -47,7 +50,7 @@ local state = {
     flyKey = Enum.KeyCode.F,
     isBindingFly = false,
     flyMode = "Hold", -- "Hold" or "Toggle"
-    flyToggled = false,
+    flyToggled = false, -- [cite: 210]
    
     -- RCS / Gun Mods
     recoil = true,
@@ -56,25 +59,25 @@ local state = {
     rapidFireKey = Enum.KeyCode.V,
     isBindingRapid = false, 
     rapidMode = "Hold", -- "Hold" or "Toggle"
-    rapidToggled = false,
+    rapidToggled = false, -- [cite: 210, 211]
 
     -- World Settings
     skyboxEnabled = false,
-    skyboxId = "rbxassetid://159454299", -- Default Night Sky
+    skyboxId = "rbxassetid://159454299", -- Default Night Sky [cite: 211]
 
     -- Visual Customization
     menuKey = Enum.KeyCode.RightShift,
     boneColor = Color3.fromRGB(255, 182, 193), -- Default set to Baby Pink
     nameColor = Color3.fromRGB(255, 255, 255),
     distanceColor = Color3.fromRGB(255, 255, 255),
-    isBindingMenu = false,
+    isBindingMenu = false, -- [cite: 211]
 }
 
 local bonesData = {}
 local deadPlayers = {} 
 local currentTarget = nil 
 local originalStats = {}
-local originalSkybox = {}
+local originalSkybox = {} -- [cite: 211]
 
 -- Helper to check if a feature is active based on Mode
 local function isFeatureActive(enabled, key, mode, toggleState)
@@ -84,7 +87,7 @@ local function isFeatureActive(enabled, key, mode, toggleState)
     else
         return UserInputService:IsKeyDown(key)
     end
-end
+end -- [cite: 212]
 
 -- =========================
 -- Optimized Weapon Mods Loop
@@ -93,49 +96,53 @@ task.spawn(function()
     while true do
         if state.active and state.isLoggedIn then
             local weapons = ReplicatedStorage:FindFirstChild("Weapons")
-            if weapons then
+            if weapons then -- [cite: 213]
                 local isRapidActive = isFeatureActive(state.rapidFireEnabled, state.rapidFireKey, state.rapidMode, state.rapidToggled)
                 
                 for _, v in pairs(weapons:GetDescendants()) do
-                    if v:IsA("ValueBase") then
-                        if not originalStats[v] then
+                    if v:IsA("ValueBase") then -- [cite: 213]
+                  
+                        if not originalStats[v] then -- [cite: 214]
                             if v.Name == "Auto" or v.Name == "FireRate" or v.Name == "RecoilControl" or v.Name == "MaxSpread" then
-                                originalStats[v] = v.Value
-                            end
+                                originalStats[v] = v.Value -- [cite: 214]
+             
+                            end -- [cite: 215]
                         end
 
                         if v.Name == "RecoilControl" then
-                            v.Value = state.recoil and 0 or (originalStats[v] or v.Value)
+                            v.Value = state.recoil and 0 or (originalStats[v] or v.Value) -- [cite: 215, 216]
                         elseif v.Name == "MaxSpread" then
-                            v.Value = state.spread and 0 or (originalStats[v] or v.Value)
+                            v.Value = state.spread and 0 or (originalStats[v] or v.Value) -- [cite: 216]
                         elseif v.Name == "Auto" then
-                            v.Value = isRapidActive and true or (originalStats[v] or v.Value)
+     
+                            v.Value = isRapidActive and true or (originalStats[v] or v.Value) -- [cite: 217]
                         elseif v.Name == "FireRate" then
-                            v.Value = isRapidActive and 0.02 or (originalStats[v] or v.Value)
-                        end
+                            v.Value = isRapidActive and 0.02 or (originalStats[v] or v.Value) -- [cite: 217, 218]
+     
+                        end -- [cite: 218]
                     end
                 end
             end
         end
-        task.wait(0.5)
+        task.wait(0.5) -- [cite: 218]
     end
 end)
 
 -- Handle Toggle Logic for Inputs
 UserInputService.InputBegan:Connect(function(input, processed)
-    if processed then return end
+    if processed then return end -- [cite: 219]
     
     -- Rapid Fire Toggle
     if input.KeyCode == state.rapidFireKey and state.rapidMode == "Toggle" then
-        state.rapidToggled = not state.rapidToggled
+        state.rapidToggled = not state.rapidToggled -- [cite: 219]
     end
     -- Speed Toggle
     if input.KeyCode == state.speedKey and state.speedMode == "Toggle" then
-        state.speedToggled = not state.speedToggled
+        state.speedToggled = not state.speedToggled -- [cite: 219]
     end
     -- Fly Toggle
     if input.KeyCode == state.flyKey and state.flyMode == "Toggle" then
-        state.flyToggled = not state.flyToggled
+        state.flyToggled = not state.flyToggled -- [cite: 219, 220]
     end
 end)
 
@@ -150,7 +157,8 @@ local function cleanupPlayer(plr)
                 line:Remove()
             end
         end
-        bonesData[plr] = nil
+  
+        bonesData[plr] = nil -- [cite: 221]
     end
 
     local char = plr.Character
@@ -160,10 +168,11 @@ local function cleanupPlayer(plr)
             if root:FindFirstChild("BnuuyBox") then root.BnuuyBox:Destroy() end
             if root:FindFirstChild("BnuuyName") then root.BnuuyName:Destroy() end
             if root:FindFirstChild("BnuuyDistance") then root.BnuuyDistance:Destroy() end
-        end
+      
+        end -- [cite: 222]
         if char:FindFirstChild("BnuuyChams") then char.BnuuyChams:Destroy() end
     end
-    deadPlayers[plr] = nil
+    deadPlayers[plr] = nil -- [cite: 222]
 end
 
 Players.PlayerRemoving:Connect(cleanupPlayer)
@@ -172,11 +181,11 @@ local fovCircle = Drawing.new("Circle")
 fovCircle.Thickness = 1
 fovCircle.NumSides = 64
 fovCircle.Visible = false
-fovCircle.Transparency = 1
+fovCircle.Transparency = 1 -- [cite: 222]
 
 local function sameTeam(plr)
     return plr.Team == LocalPlayer.Team or plr.TeamColor == LocalPlayer.TeamColor 
-end
+end -- [cite: 222]
 
 local function isAlive(plr)
     if not (plr and plr.Character and plr.Character:FindFirstChild("Humanoid") and plr.Character:FindFirstChild("HumanoidRootPart")) then
@@ -184,7 +193,8 @@ local function isAlive(plr)
     end
     if plr.Character.Humanoid.Health <= 0 then return false end
     if plr.Character.HumanoidRootPart.Position.Y < -5 then return false end
-    return true
+ 
+    return true -- [cite: 223]
 end
 
 local function isVisible(part, character)
@@ -193,34 +203,38 @@ local function isVisible(part, character)
     rayParams.FilterDescendantsInstances = {LocalPlayer.Character, Camera, character}
     rayParams.FilterType = Enum.RaycastFilterType.Exclude
     local result = workspace:Raycast(Camera.CFrame.Position, (part.Position - Camera.CFrame.Position), rayParams)
-    return result == nil
+    return result == nil -- [cite: 223]
 end
 
 local function getClosestToMouse()
     local target, shortestDist = nil, state.fovRadius
     local mouseLoc = UserInputService:GetMouseLocation()
     for _, plr in ipairs(Players:GetPlayers()) do
-        if plr ~= LocalPlayer and isAlive(plr) and (not state.enemyOnly or not sameTeam(plr)) then
+        if plr ~= LocalPlayer and isAlive(plr) and (not state.enemyOnly or not sameTeam(plr)) then -- [cite: 223, 224]
             local part = plr.Character:FindFirstChild(state.aimPart)
             if part then
                 local pos, onScreen = Camera:WorldToViewportPoint(part.Position)
                 if onScreen then
                     local dist = (Vector2.new(pos.X, pos.Y) - mouseLoc).Magnitude
-                    if dist < shortestDist and isVisible(part, plr.Character) then 
-                        shortestDist = dist; target = plr 
+    
+                    if dist < shortestDist and isVisible(part, plr.Character) then -- [cite: 224, 225]
+                        shortestDist = dist;
+                        target = plr -- [cite: 226]
                     end
                 end
             end
         end
     end
-    return target
+    return target -- [cite: 226]
 end
 
 -- =========================
 -- Visuals (ESP) Functions
 -- =========================
 local function drawLine()
-    local l = Drawing.new("Line"); l.Visible = false; l.Thickness = 1.5; l.Transparency = 1; l.Color = state.boneColor; return l
+    local l = Drawing.new("Line"); -- [cite: 227]
+    l.Visible = false; l.Thickness = 1.5; l.Transparency = 1; l.Color = state.boneColor; -- [cite: 227]
+    return l -- [cite: 228]
 end
 
 local function setupBones(plr)
@@ -231,7 +245,8 @@ local function setupBones(plr)
             UT_LUA = drawLine(), LUA_LLA = drawLine(),
             UT_RUA = drawLine(), RUA_RLA = drawLine(),
             LT_LUL = drawLine(), LUL_LLL = drawLine(),
-            LT_RUL = drawLine(), RUL_RLL = drawLine()
+     
+            LT_RUL = drawLine(), RUL_RLL = drawLine() -- [cite: 229]
         }
     }
 end
@@ -247,7 +262,8 @@ local function applyVisuals(plr)
     local shouldShowESP = (not state.enemyOnly or isEnemy) and state.isLoggedIn
 
     local highlight = char:FindFirstChild("BnuuyChams")
-    if state.chams and shouldShowESP then
+    
+    if state.chams and shouldShowESP then -- [cite: 230]
         if not highlight then
             highlight = Instance.new("Highlight", char)
             highlight.Name = "BnuuyChams"
@@ -256,44 +272,56 @@ local function applyVisuals(plr)
         highlight.OutlineColor = Color3.fromRGB(255, 255, 255)
         highlight.FillTransparency = 0.5
         highlight.OutlineTransparency = 0
-        highlight.Enabled = true
+      
+        highlight.Enabled = true -- [cite: 230, 231]
     elseif highlight then highlight.Enabled = false end
 
     local bGui = root:FindFirstChild("BnuuyBox")
     if state.box and shouldShowESP then
         if not bGui then
             bGui = Instance.new("BillboardGui", root)
-            bGui.Name = "BnuuyBox"; bGui.AlwaysOnTop = true; bGui.Size = UDim2.new(4.5, 0, 6, 0)
-            local frame = Instance.new("Frame", bGui); frame.Size = UDim2.new(1, 0, 1, 0); frame.BackgroundTransparency = 1
-            local stroke = Instance.new("UIStroke", frame); stroke.Thickness = 2
+            bGui.Name = "BnuuyBox"; -- [cite: 231, 232]
+            bGui.AlwaysOnTop = true; bGui.Size = UDim2.new(4.5, 0, 6, 0) -- [cite: 232]
+            local frame = Instance.new("Frame", bGui); -- [cite: 232]
+            frame.Size = UDim2.new(1, 0, 1, 0); frame.BackgroundTransparency = 1 -- [cite: 233]
+            local stroke = Instance.new("UIStroke", frame); -- [cite: 233]
+            stroke.Thickness = 2 -- [cite: 234]
         end
         bGui.Frame.UIStroke.Color = state.boneColor
-        bGui.Enabled = true
+        bGui.Enabled = true -- [cite: 234]
     elseif bGui then bGui.Enabled = false end
 
     local nGui = root:FindFirstChild("BnuuyName")
     if state.name and head and shouldShowESP then
         if not nGui then
             nGui = Instance.new("BillboardGui", root)
-            nGui.Name = "BnuuyName"; nGui.Size = UDim2.new(0, 200, 0, 50); nGui.StudsOffset = Vector3.new(0, 4, 0); nGui.AlwaysOnTop = true
-            local label = Instance.new("TextLabel", nGui); label.BackgroundTransparency = 1; label.Size = UDim2.new(1, 0, 1, 0); label.Font = Enum.Font.SourceSansBold; label.TextSize = 14; label.TextStrokeTransparency = 0
+            nGui.Name = "BnuuyName"; -- [cite: 234, 235]
+            nGui.Size = UDim2.new(0, 200, 0, 50); nGui.StudsOffset = Vector3.new(0, 4, 0); -- [cite: 235]
+            nGui.AlwaysOnTop = true -- [cite: 236]
+            local label = Instance.new("TextLabel", nGui); -- [cite: 236]
+            label.BackgroundTransparency = 1; label.Size = UDim2.new(1, 0, 1, 0); label.Font = Enum.Font.SourceSansBold; label.TextSize = 14; -- [cite: 237]
+            label.TextStrokeTransparency = 0 -- [cite: 238]
         end
         nGui.TextLabel.Text = plr.DisplayName or plr.Name
         nGui.TextLabel.TextColor3 = state.nameColor
-        nGui.Enabled = true
+        nGui.Enabled = true -- [cite: 238]
     elseif nGui then nGui.Enabled = false end
 
     local dGui = root:FindFirstChild("BnuuyDistance")
     if state.distance and shouldShowESP then
         if not dGui then
             dGui = Instance.new("BillboardGui", root)
-            dGui.Name = "BnuuyDistance"; dGui.Size = UDim2.new(0, 200, 0, 50); dGui.StudsOffset = Vector3.new(0, -4.5, 0); dGui.AlwaysOnTop = true
-            local label = Instance.new("TextLabel", dGui); label.BackgroundTransparency = 1; label.Size = UDim2.new(1, 0, 1, 0); label.Font = Enum.Font.SourceSansBold; label.TextSize = 12; label.TextStrokeTransparency = 0
+       
+            dGui.Name = "BnuuyDistance"; dGui.Size = UDim2.new(0, 200, 0, 50); dGui.StudsOffset = Vector3.new(0, -4.5, 0); -- [cite: 239]
+            dGui.AlwaysOnTop = true -- [cite: 240]
+            local label = Instance.new("TextLabel", dGui); -- [cite: 240]
+            label.BackgroundTransparency = 1; label.Size = UDim2.new(1, 0, 1, 0); label.Font = Enum.Font.SourceSansBold; label.TextSize = 12; -- [cite: 241]
+            label.TextStrokeTransparency = 0 -- [cite: 242]
         end
         local studs = (root.Position - Camera.CFrame.Position).Magnitude
         dGui.TextLabel.Text = "[" .. math.floor(studs / 3.57) .. "m]"
         dGui.TextLabel.TextColor3 = state.distanceColor
-        dGui.Enabled = true
+        dGui.Enabled = true -- [cite: 242]
     elseif dGui then dGui.Enabled = false end
 end
 
@@ -301,87 +329,142 @@ end
 -- UI SYSTEM
 -- =========================
 local function makeUI()
-    local sg = Instance.new("ScreenGui", PlayerGui); sg.Name = "BnuuyV4"; sg.ResetOnSpawn = false
+    local sg = Instance.new("ScreenGui", PlayerGui); -- [cite: 243]
+    sg.Name = "BnuuyV4"; sg.ResetOnSpawn = false -- [cite: 243]
     local globalTransparency = 0.2
 
     local overlay = Instance.new("Frame", sg)
-    overlay.Size = UDim2.new(0, 360, 0, 30); overlay.Position = UDim2.new(0, 10, 0, 10); overlay.BackgroundColor3 = Color3.fromRGB(15, 12, 18); overlay.BackgroundTransparency = globalTransparency; overlay.Visible = false
+    overlay.Size = UDim2.new(0, 360, 0, 30); -- [cite: 243, 244]
+    overlay.Position = UDim2.new(0, 10, 0, 10); overlay.BackgroundColor3 = Color3.fromRGB(15, 12, 18); overlay.BackgroundTransparency = globalTransparency; -- [cite: 244]
+    overlay.Visible = false -- [cite: 245]
     Instance.new("UICorner", overlay).CornerRadius = UDim.new(0, 6)
-    local oStroke = Instance.new("UIStroke", overlay); oStroke.Color = state.boneColor; oStroke.Thickness = 1.2
+    local oStroke = Instance.new("UIStroke", overlay); -- [cite: 245]
+    oStroke.Color = state.boneColor; oStroke.Thickness = 1.2 -- [cite: 246]
     local oText = Instance.new("TextLabel", overlay)
-    oText.Size = UDim2.new(1, -20, 1, 0); oText.Position = UDim2.new(0, 10, 0, 0); oText.BackgroundTransparency = 1; oText.Font = "SourceSansBold"; oText.TextSize = 16; oText.TextColor3 = Color3.new(1,1,1); oText.TextXAlignment = "Left"; oText.RichText = true
+    oText.Size = UDim2.new(1, -20, 1, 0); -- [cite: 246]
+    oText.Position = UDim2.new(0, 10, 0, 0); oText.BackgroundTransparency = 1; oText.Font = "SourceSansBold"; oText.TextSize = 16; oText.TextColor3 = Color3.new(1,1,1); -- [cite: 247]
+    oText.TextXAlignment = "Left"; oText.RichText = true -- [cite: 248]
 
-    local main = Instance.new("Frame", sg); main.Size = UDim2.new(0, 620, 0, 440); main.Position = UDim2.new(0.5, -310, 0.5, -220); main.BackgroundColor3 = Color3.fromRGB(15, 12, 18); main.BackgroundTransparency = globalTransparency; main.Active = true; main.Draggable = true; main.BorderSizePixel = 0; main.Visible = false
+    local main = Instance.new("Frame", sg); main.Size = UDim2.new(0, 620, 0, 440); -- [cite: 248, 249]
+    main.Position = UDim2.new(0.5, -310, 0.5, -220); main.BackgroundColor3 = Color3.fromRGB(15, 12, 18); main.BackgroundTransparency = globalTransparency; main.Active = true; main.Draggable = true; -- [cite: 249]
+    main.BorderSizePixel = 0; main.Visible = false -- [cite: 250]
     Instance.new("UICorner", main)
     
-    local kbList = Instance.new("Frame", sg); kbList.Size = UDim2.new(0, 200, 0, 150); kbList.Position = UDim2.new(0, 20, 0.5, -75); kbList.BackgroundColor3 = Color3.fromRGB(15, 12, 18); kbList.BackgroundTransparency = globalTransparency; kbList.Active = true; kbList.Draggable = true; kbList.Visible = false
+    local kbList = Instance.new("Frame", sg); -- [cite: 250, 251]
+    kbList.Size = UDim2.new(0, 200, 0, 150); kbList.Position = UDim2.new(0, 20, 0.5, -75); kbList.BackgroundColor3 = Color3.fromRGB(15, 12, 18); kbList.BackgroundTransparency = globalTransparency; -- [cite: 251]
+    kbList.Active = true; kbList.Draggable = true; kbList.Visible = false -- [cite: 252]
     Instance.new("UICorner", kbList)
 
     local loginFrame = Instance.new("Frame", sg)
-    loginFrame.Size = UDim2.new(0, 300, 0, 150); loginFrame.Position = UDim2.new(0.5, -150, 0.5, -75); loginFrame.BackgroundColor3 = Color3.fromRGB(15, 12, 18); loginFrame.BackgroundTransparency = 0.1; Instance.new("UICorner", loginFrame)
-    local loginTitle = Instance.new("TextLabel", loginFrame); loginTitle.Text = "Enter Your Username"; loginTitle.Size = UDim2.new(1, 0, 0, 40); loginTitle.Font = "SourceSansBold"; loginTitle.TextColor3 = state.boneColor; loginTitle.TextSize = 18; loginTitle.BackgroundTransparency = 1
-    local inputField = Instance.new("TextBox", loginFrame); inputField.Size = UDim2.new(0.8, 0, 0, 35); inputField.Position = UDim2.new(0.1, 0, 0.35, 0); inputField.BackgroundColor3 = Color3.fromRGB(25, 20, 30); inputField.TextColor3 = Color3.new(1, 1, 1); inputField.PlaceholderText = "Username..."; inputField.Text = ""; inputField.Font = "SourceSans"; inputField.TextSize = 16; Instance.new("UICorner", inputField)
-    local enterBtn = Instance.new("TextButton", loginFrame); enterBtn.Size = UDim2.new(0.4, 0, 0, 30); enterBtn.Position = UDim2.new(0.3, 0, 0.7, 0); enterBtn.BackgroundColor3 = state.boneColor; enterBtn.Text = "Enter"; enterBtn.TextColor3 = Color3.new(1, 1, 1); enterBtn.Font = "SourceSansBold"; enterBtn.TextSize = 16; Instance.new("UICorner", enterBtn)
+    loginFrame.Size = UDim2.new(0, 300, 0, 150); -- [cite: 252, 253]
+    loginFrame.Position = UDim2.new(0.5, -150, 0.5, -75); loginFrame.BackgroundColor3 = Color3.fromRGB(15, 12, 18); loginFrame.BackgroundTransparency = 0.1; -- [cite: 253]
+    Instance.new("UICorner", loginFrame) -- [cite: 254]
+    local loginTitle = Instance.new("TextLabel", loginFrame); loginTitle.Text = "Enter Your Username"; -- [cite: 254]
+    loginTitle.Size = UDim2.new(1, 0, 0, 40); loginTitle.Font = "SourceSansBold"; loginTitle.TextColor3 = state.boneColor; loginTitle.TextSize = 18; -- [cite: 255]
+    loginTitle.BackgroundTransparency = 1 -- [cite: 256]
+    local inputField = Instance.new("TextBox", loginFrame); inputField.Size = UDim2.new(0.8, 0, 0, 35); -- [cite: 256]
+    inputField.Position = UDim2.new(0.1, 0, 0.35, 0); inputField.BackgroundColor3 = Color3.fromRGB(25, 20, 30); inputField.TextColor3 = Color3.new(1, 1, 1); inputField.PlaceholderText = "Username..."; -- [cite: 257]
+    inputField.Text = ""; inputField.Font = "SourceSans"; inputField.TextSize = 16; Instance.new("UICorner", inputField) -- [cite: 258]
+    local enterBtn = Instance.new("TextButton", loginFrame); -- [cite: 258, 259]
+    enterBtn.Size = UDim2.new(0.4, 0, 0, 30); enterBtn.Position = UDim2.new(0.3, 0, 0.7, 0); enterBtn.BackgroundColor3 = state.boneColor; enterBtn.Text = "Enter"; -- [cite: 259, 260]
+    enterBtn.TextColor3 = Color3.new(1, 1, 1); enterBtn.Font = "SourceSansBold"; enterBtn.TextSize = 16; -- [cite: 260]
+    Instance.new("UICorner", enterBtn) -- [cite: 261]
 
     local function finalizeLogin()
         if inputField.Text ~= "" then
-            state.username = inputField.Text; state.isLoggedIn = true; loginFrame:Destroy(); main.Visible = true; kbList.Visible = true; overlay.Visible = true
+            state.username = inputField.Text;
+            state.isLoggedIn = true; loginFrame:Destroy(); main.Visible = true; kbList.Visible = true; -- [cite: 262]
+            overlay.Visible = true -- [cite: 263]
         end
     end
     enterBtn.MouseButton1Click:Connect(finalizeLogin)
     inputField.FocusLost:Connect(function(e) if e then finalizeLogin() end end)
 
-    local lastTime = tick(); local frameCount = 0; local fps = 0
+    local lastTime = tick(); -- [cite: 263]
+    local frameCount = 0; local fps = 0 -- [cite: 264]
     RunService.RenderStepped:Connect(function()
         if state.isLoggedIn then
             frameCount = frameCount + 1
             if tick() - lastTime >= 1 then fps = frameCount; frameCount = 0; lastTime = tick() end
             oStroke.Color = state.boneColor
-            oText.Text = string.format("<font color='#%s'>Femboys :3 </font>  |  %s  |  FPS: %d  |  Players: %d", state.boneColor:ToHex(), state.username, fps, #Players:GetPlayers())
+            oText.Text = string.format("<font color='#%s'>Femboy :3</font>  |  %s  |  FPS: %d  |  Players: %d", state.boneColor:ToHex(), state.username, fps, #Players:GetPlayers()) -- [cite: 264, 265]
         end
     end)
 
-    local kbTitle = Instance.new("TextLabel", kbList); kbTitle.Text = "keybinds"; kbTitle.Size = UDim2.new(1, 0, 0, 30); kbTitle.BackgroundTransparency = 1; kbTitle.Font = "SourceSansBold"; kbTitle.TextColor3 = state.boneColor; kbTitle.TextSize = 16
-    local kbCont = Instance.new("Frame", kbList); kbCont.Size = UDim2.new(1, -20, 1, -40); kbCont.Position = UDim2.new(0, 10, 0, 30); kbCont.BackgroundTransparency = 1
+    local kbTitle = Instance.new("TextLabel", kbList); -- [cite: 265, 266]
+    kbTitle.Text = "keybinds"; kbTitle.Size = UDim2.new(1, 0, 0, 30); kbTitle.BackgroundTransparency = 1; kbTitle.Font = "SourceSansBold"; kbTitle.TextColor3 = state.boneColor; -- [cite: 266]
+    kbTitle.TextSize = 16 -- [cite: 267]
+    local kbCont = Instance.new("Frame", kbList); kbCont.Size = UDim2.new(1, -20, 1, -40); -- [cite: 267, 268]
+    kbCont.Position = UDim2.new(0, 10, 0, 30); kbCont.BackgroundTransparency = 1 -- [cite: 268]
     Instance.new("UIListLayout", kbCont).Padding = UDim.new(0, 2)
     
     local function mkKbLine(feat)
-        local f = Instance.new("Frame", kbCont); f.Size = UDim2.new(1,0,0,18); f.BackgroundTransparency = 1
-        local l = Instance.new("TextLabel", f); l.Text = feat; l.Size = UDim2.new(0.5, 0, 1, 0); l.BackgroundTransparency = 1; l.TextColor3 = Color3.new(0.8,0.8,0.8); l.Font = "SourceSans"; l.TextSize = 11; l.TextXAlignment = "Left"
-        local v = Instance.new("TextLabel", f); v.Name = "Val"; v.Text = ""; v.Size = UDim2.new(0.5, 0, 1, 0); v.Position = UDim2.new(0.5, 0, 0, 0); v.BackgroundTransparency = 1; v.TextColor3 = Color3.new(0.6,0.6,0.6); v.Font = "SourceSansBold"; v.TextSize = 11; v.TextXAlignment = "Right"
+        local f = Instance.new("Frame", kbCont); -- [cite: 268, 269]
+        f.Size = UDim2.new(1,0,0,18); f.BackgroundTransparency = 1 -- [cite: 269]
+        local l = Instance.new("TextLabel", f); -- [cite: 269, 270]
+        l.Text = feat; l.Size = UDim2.new(0.5, 0, 1, 0); l.BackgroundTransparency = 1; l.TextColor3 = Color3.new(0.8,0.8,0.8); l.Font = "SourceSans"; -- [cite: 270]
+        l.TextSize = 11; l.TextXAlignment = "Left" -- [cite: 271]
+        local v = Instance.new("TextLabel", f); -- [cite: 271, 272]
+        v.Name = "Val"; v.Text = ""; v.Size = UDim2.new(0.5, 0, 1, 0); v.Position = UDim2.new(0.5, 0, 0, 0); -- [cite: 272]
+        v.BackgroundTransparency = 1; v.TextColor3 = Color3.new(0.6,0.6,0.6); v.Font = "SourceSansBold"; v.TextSize = 11; -- [cite: 273]
+        v.TextXAlignment = "Right" -- [cite: 274]
         return v
     end
 
-    local menuVal = mkKbLine("Menu"); local aimVal = mkKbLine("Aimbot"); local speedVal = mkKbLine("Speed"); local flyVal = mkKbLine("Fly"); local rapidVal = mkKbLine("Rapid Fire")
+    local menuVal = mkKbLine("Menu"); -- [cite: 274]
+    local aimVal = mkKbLine("Aimbot"); local speedVal = mkKbLine("Speed"); local flyVal = mkKbLine("Fly"); -- [cite: 275]
+    local bhopVal = mkKbLine("B-Hop");
+    local rapidVal = mkKbLine("Rapid Fire") -- [cite: 276]
 
-    local nav = Instance.new("Frame", main); nav.Size = UDim2.new(1, 0, 0, 45); nav.BackgroundTransparency = 1
-    local title = Instance.new("TextLabel", nav); title.Text = "Femboy :3"; title.Size = UDim2.new(0, 120, 1, 0); title.Position = UDim2.new(0, 15, 0, 0); title.Font = "SourceSansBold"; title.TextColor3 = Color3.new(1,1,1); title.TextSize = 20; title.BackgroundTransparency = 1; title.TextXAlignment = "Left"
+    local nav = Instance.new("Frame", main); nav.Size = UDim2.new(1, 0, 0, 45); -- [cite: 276, 277]
+    nav.BackgroundTransparency = 1 -- [cite: 277]
+    local title = Instance.new("TextLabel", nav); title.Text = "Femboy :3"; title.Size = UDim2.new(0, 120, 1, 0); -- [cite: 277, 278]
+    title.Position = UDim2.new(0, 15, 0, 0); title.Font = "SourceSansBold"; title.TextColor3 = Color3.new(1,1,1); title.TextSize = 20; title.BackgroundTransparency = 1; -- [cite: 278, 279]
+    title.TextXAlignment = "Left" -- [cite: 279]
 
-    local container = Instance.new("Frame", main); container.Size = UDim2.new(1, -20, 1, -60); container.Position = UDim2.new(0, 10, 0, 50); container.BackgroundTransparency = 1
+    local container = Instance.new("Frame", main); container.Size = UDim2.new(1, -20, 1, -60); -- [cite: 279, 280]
+    container.Position = UDim2.new(0, 10, 0, 50); container.BackgroundTransparency = 1 -- [cite: 280]
     local pages = {Aimbot = Instance.new("Frame", container), ESP = Instance.new("Frame", container), Movement = Instance.new("Frame", container), World = Instance.new("Frame", container), Settings = Instance.new("Frame", container)}
-    for _, p in pairs(pages) do p.Size = UDim2.new(1, 0, 1, 0); p.BackgroundTransparency = 1; p.Visible = false end
+    for _, p in pairs(pages) do p.Size = UDim2.new(1, 0, 1, 0); -- [cite: 280]
+    p.BackgroundTransparency = 1; p.Visible = false end -- [cite: 281]
     pages.Aimbot.Visible = true
 
     local function mkSec(name, par, h)
-        local s = Instance.new("Frame", par); s.Size = UDim2.new(1,0,0,h); s.BackgroundColor3 = Color3.fromRGB(22, 18, 26); s.BackgroundTransparency = 0.2; Instance.new("UICorner", s)
-        local t = Instance.new("TextLabel", s); t.Text = name; t.TextColor3 = state.boneColor; t.Size = UDim2.new(1,-10,0,25); t.Position = UDim2.new(0,10,0,5); t.Font = "SourceSansBold"; t.TextSize = 16; t.TextXAlignment = "Left"; t.BackgroundTransparency = 1
-        local c = Instance.new("Frame", s); c.Size = UDim2.new(1,-20,1,-35); c.Position = UDim2.new(0,10,0,30); c.BackgroundTransparency = 1
-        Instance.new("UIListLayout", c).Padding = UDim.new(0,5); return c, t
+        local s = Instance.new("Frame", par); -- [cite: 281, 282]
+        s.Size = UDim2.new(1,0,0,h); s.BackgroundColor3 = Color3.fromRGB(22, 18, 26); s.BackgroundTransparency = 0.2; -- [cite: 282]
+        Instance.new("UICorner", s) -- [cite: 283]
+        local t = Instance.new("TextLabel", s); t.Text = name; t.TextColor3 = state.boneColor; -- [cite: 283, 284]
+        t.Size = UDim2.new(1,-10,0,25); t.Position = UDim2.new(0,10,0,5); t.Font = "SourceSansBold"; t.TextSize = 16; t.TextXAlignment = "Left"; -- [cite: 284]
+        t.BackgroundTransparency = 1 -- [cite: 285]
+        local c = Instance.new("Frame", s); c.Size = UDim2.new(1,-20,1,-35); -- [cite: 285]
+        c.Position = UDim2.new(0,10,0,30); c.BackgroundTransparency = 1 -- [cite: 286]
+        Instance.new("UIListLayout", c).Padding = UDim.new(0,5); -- [cite: 286]
+        return c, t -- [cite: 287]
     end
 
     local function mkTog(txt, par, key)
-        local f = Instance.new("Frame", par); f.Size = UDim2.new(1,0,0,22); f.BackgroundTransparency = 1
-        local b = Instance.new("TextButton", f); b.Size = UDim2.new(0,18,0,18); b.Position = UDim2.new(1,-18,0,2); b.BackgroundColor3 = state[key] and state.boneColor or Color3.fromRGB(40,40,50); b.Text = ""; Instance.new("UICorner", b)
-        local l = Instance.new("TextLabel", f); l.Text = txt; l.Size = UDim2.new(1,-30,1,0); l.TextColor3 = Color3.new(0.7,0.7,0.7); l.Font = "SourceSans"; l.TextSize = 14; l.TextXAlignment = "Left"; l.BackgroundTransparency = 1
+        local f = Instance.new("Frame", par); -- [cite: 287, 288]
+        f.Size = UDim2.new(1,0,0,22); f.BackgroundTransparency = 1 -- [cite: 288]
+        local b = Instance.new("TextButton", f); -- [cite: 288, 289]
+        b.Size = UDim2.new(0,18,0,18); b.Position = UDim2.new(1,-18,0,2); b.BackgroundColor3 = state[key] and state.boneColor or Color3.fromRGB(40,40,50); b.Text = ""; -- [cite: 289, 290]
+        Instance.new("UICorner", b) -- [cite: 290]
+        local l = Instance.new("TextLabel", f); l.Text = txt; l.Size = UDim2.new(1,-30,1,0); -- [cite: 290, 291]
+        l.TextColor3 = Color3.new(0.7,0.7,0.7); l.Font = "SourceSans"; l.TextSize = 14; l.TextXAlignment = "Left"; -- [cite: 291]
+        l.BackgroundTransparency = 1 -- [cite: 292]
         b.MouseButton1Click:Connect(function() state[key] = not state[key] end)
         RunService.Heartbeat:Connect(function() if not main.Visible then return end; b.BackgroundColor3 = state[key] and state.boneColor or Color3.fromRGB(40,40,50) end)
         return b
     end
 
     local function mkBind(txt, par, stateKey, bindFlag, modeKey)
-        local f = Instance.new("Frame", par); f.Size = UDim2.new(1,0,0,22); f.BackgroundTransparency = 1
-        local l = Instance.new("TextLabel", f); l.Text = txt; l.Size = UDim2.new(1,-60,1,0); l.TextColor3 = Color3.new(0.7,0.7,0.7); l.Font = "SourceSans"; l.TextSize = 14; l.TextXAlignment = "Left"; l.BackgroundTransparency = 1
-        local b = Instance.new("TextButton", f); b.Size = UDim2.new(0,60,0,18); b.Position = UDim2.new(1,-60,0,2); b.BackgroundColor3 = Color3.fromRGB(30, 30, 40); b.TextColor3 = Color3.new(1,1,1); b.Font = "SourceSansBold"; b.TextSize = 10; b.Text = "["..state[stateKey].Name.."]"; Instance.new("UICorner", b)
+        local f = Instance.new("Frame", par); -- [cite: 292, 293]
+        f.Size = UDim2.new(1,0,0,22); f.BackgroundTransparency = 1 -- [cite: 293]
+        local l = Instance.new("TextLabel", f); -- [cite: 293, 294]
+        l.Text = txt; l.Size = UDim2.new(1,-60,1,0); l.TextColor3 = Color3.new(0.7,0.7,0.7); l.Font = "SourceSans"; l.TextSize = 14; l.TextXAlignment = "Left"; -- [cite: 294]
+        l.BackgroundTransparency = 1 -- [cite: 295]
+        local b = Instance.new("TextButton", f); b.Size = UDim2.new(0,60,0,18); -- [cite: 295]
+        b.Position = UDim2.new(1,-60,0,2); b.BackgroundColor3 = Color3.fromRGB(30, 30, 40); b.TextColor3 = Color3.new(1,1,1); b.Font = "SourceSansBold"; b.TextSize = 10; b.Text = "["..state[stateKey].Name.."]"; -- [cite: 296]
+        Instance.new("UICorner", b) -- [cite: 297]
         b.MouseButton1Click:Connect(function() state[bindFlag] = true; b.Text = "[...]" end)
         if modeKey then
             b.MouseButton2Click:Connect(function()
@@ -389,18 +472,24 @@ local function makeUI()
             end)
         end
         UserInputService.InputBegan:Connect(function(input) 
-            if state[bindFlag] and input.UserInputType == Enum.UserInputType.Keyboard then 
-                state[stateKey] = input.KeyCode; state[bindFlag] = false; b.Text = "["..state[stateKey].Name.."]" 
+         
+            if state[bindFlag] and input.UserInputType == Enum.UserInputType.Keyboard then -- [cite: 297, 298]
+                state[stateKey] = input.KeyCode; state[bindFlag] = false; b.Text = "["..state[stateKey].Name.."]" -- [cite: 298]
             end 
         end)
         return b
     end
 
     local function mkSli(txt, par, min, max, key)
-        local f = Instance.new("Frame", par); f.Size = UDim2.new(1,0,0,30); f.BackgroundTransparency = 1
-        local l = Instance.new("TextLabel", f); l.Text = txt .. ": " .. math.floor(state[key]); l.Size = UDim2.new(1,0,0,14); l.TextColor3 = Color3.new(0.7,0.7,0.7); l.Font = "SourceSans"; l.TextSize = 12; l.TextXAlignment = "Left"; l.BackgroundTransparency = 1
-        local b = Instance.new("Frame", f); b.Size = UDim2.new(1,0,0,4); b.Position = UDim2.new(0,0,0,18); b.BackgroundColor3 = Color3.fromRGB(40,40,50); Instance.new("UICorner", b)
-        local fill = Instance.new("Frame", b); fill.Size = UDim2.new((state[key]-min)/(max-min), 0, 1, 0); fill.BackgroundColor3 = state.boneColor; Instance.new("UICorner", fill)
+        local f = Instance.new("Frame", par); -- [cite: 298, 299]
+        f.Size = UDim2.new(1,0,0,30); f.BackgroundTransparency = 1 -- [cite: 299]
+        local l = Instance.new("TextLabel", f); -- [cite: 299, 300]
+        l.Text = txt .. ": " .. math.floor(state[key]); l.Size = UDim2.new(1,0,0,14); l.TextColor3 = Color3.new(0.7,0.7,0.7); l.Font = "SourceSans"; l.TextSize = 12; -- [cite: 300]
+        l.TextXAlignment = "Left"; l.BackgroundTransparency = 1 -- [cite: 301]
+        local b = Instance.new("Frame", f); -- [cite: 301, 302]
+        b.Size = UDim2.new(1,0,0,4); b.Position = UDim2.new(0,0,0,18); b.BackgroundColor3 = Color3.fromRGB(40,40,50); Instance.new("UICorner", b) -- [cite: 302]
+        local fill = Instance.new("Frame", b); -- [cite: 302, 303]
+        fill.Size = UDim2.new((state[key]-min)/(max-min), 0, 1, 0); fill.BackgroundColor3 = state.boneColor; Instance.new("UICorner", fill) -- [cite: 303]
         
         -- Dynamic Color Update
         RunService.Heartbeat:Connect(function() 
@@ -408,57 +497,89 @@ local function makeUI()
         end)
 
         b.InputBegan:Connect(function(input) if input.UserInputType == Enum.UserInputType.MouseButton1 then local conn; conn = RunService.RenderStepped:Connect(function()
-            local per = math.clamp((UserInputService:GetMouseLocation().X - b.AbsolutePosition.X) / b.AbsoluteSize.X, 0, 1)
+            local per = math.clamp((UserInputService:GetMouseLocation().X - b.AbsolutePosition.X) / b.AbsoluteSize.X, 0, 1) -- [cite: 303, 304]
             state[key] = min + (max - min) * per; fill.Size = UDim2.new(per, 0, 1, 0); l.Text = txt .. ": " .. math.floor(state[key])
         end); UserInputService.InputEnded:Connect(function(i) if i.UserInputType == Enum.UserInputType.MouseButton1 then conn:Disconnect() end end) end end)
         return fill
     end
 
-    local btnContainer = Instance.new("Frame", nav); btnContainer.Size = UDim2.new(0, 480, 1, 0); btnContainer.Position = UDim2.new(1, -490, 0, 0); btnContainer.BackgroundTransparency = 1
-    local uiList = Instance.new("UIListLayout", btnContainer); uiList.FillDirection = Enum.FillDirection.Horizontal; uiList.HorizontalAlignment = Enum.HorizontalAlignment.Right; uiList.VerticalAlignment = Enum.VerticalAlignment.Center; uiList.Padding = UDim.new(0, 8); uiList.SortOrder = Enum.SortOrder.LayoutOrder
+    local btnContainer = Instance.new("Frame", nav); -- [cite: 304, 305]
+    btnContainer.Size = UDim2.new(0, 480, 1, 0); btnContainer.Position = UDim2.new(1, -490, 0, 0); -- [cite: 305]
+    btnContainer.BackgroundTransparency = 1 -- [cite: 306]
+    local uiList = Instance.new("UIListLayout", btnContainer); uiList.FillDirection = Enum.FillDirection.Horizontal; uiList.HorizontalAlignment = Enum.HorizontalAlignment.Right; uiList.VerticalAlignment = Enum.VerticalAlignment.Center; -- [cite: 306, 307]
+    uiList.Padding = UDim.new(0, 8); uiList.SortOrder = Enum.SortOrder.LayoutOrder -- [cite: 307]
 
     local function mkTab(name, order)
-        local b = Instance.new("TextButton", btnContainer); b.Text = name; b.Size = UDim2.new(0, 75, 0, 30); b.BackgroundColor3 = Color3.fromRGB(30, 30, 40); b.TextColor3 = Color3.new(1,1,1); b.Font = "SourceSansBold"; Instance.new("UICorner", b); b.LayoutOrder = order
-        b.MouseButton1Click:Connect(function() for _, p in pairs(pages) do p.Visible = false end; pages[name].Visible = true end); return b
+        local b = Instance.new("TextButton", btnContainer); -- [cite: 307, 308]
+        b.Text = name; b.Size = UDim2.new(0, 75, 0, 30); b.BackgroundColor3 = Color3.fromRGB(30, 30, 40); b.TextColor3 = Color3.new(1,1,1); b.Font = "SourceSansBold"; -- [cite: 308]
+        Instance.new("UICorner", b); b.LayoutOrder = order -- [cite: 309]
+        b.MouseButton1Click:Connect(function() for _, p in pairs(pages) do p.Visible = false end; pages[name].Visible = true end);
+        return b -- [cite: 310]
     end
 
-    mkTab("Aimbot", 1); mkTab("ESP", 2); mkTab("Movement", 3); mkTab("World", 4); mkTab("Settings", 5)
+    mkTab("Aimbot", 1); mkTab("ESP", 2); mkTab("Movement", 3); mkTab("World", 4); -- [cite: 310]
+    mkTab("Settings", 5) -- [cite: 311]
 
     -- PAGE CONTENT
-    local aL = Instance.new("Frame", pages.Aimbot); aL.Size = UDim2.new(0.48, 0, 1, 0); aL.BackgroundTransparency = 1; local aR = Instance.new("Frame", pages.Aimbot); aR.Position = UDim2.new(0.52, 0, 0, 0); aR.Size = UDim2.new(0.48, 0, 1, 0); aR.BackgroundTransparency = 1; Instance.new("UIListLayout", aL).Padding = UDim.new(0,10); Instance.new("UIListLayout", aR).Padding = UDim.new(0,10)
-    local aimC, aimCT = mkSec("Main Aimbot", aL, 220); mkTog("Enabled", aimC, "aimbot"); mkTog("Visible Only", aimC, "wallCheck"); mkTog("Draw FOV Circle", aimC, "fovEnabled"); mkSli("FOV Radius", aimC, 10, 800, "fovRadius"); mkSli("Smoothing", aimC, 1, 20, "smoothing")
-    local rcsC, rcsCT = mkSec("Weapon Mods", aR, 180); mkTog("No Recoil", rcsC, "recoil"); mkTog("No Spread", rcsC, "spread"); mkTog("Rapid Fire", rcsC, "rapidFireEnabled"); mkBind("Rapid Key", rcsC, "rapidFireKey", "isBindingRapid", "rapidMode")
+    local aL = Instance.new("Frame", pages.Aimbot); -- [cite: 311, 312]
+    aL.Size = UDim2.new(0.48, 0, 1, 0); aL.BackgroundTransparency = 1; local aR = Instance.new("Frame", pages.Aimbot); aR.Position = UDim2.new(0.52, 0, 0, 0); -- [cite: 312]
+    aR.Size = UDim2.new(0.48, 0, 1, 0); aR.BackgroundTransparency = 1; Instance.new("UIListLayout", aL).Padding = UDim.new(0,10); -- [cite: 313]
+    Instance.new("UIListLayout", aR).Padding = UDim.new(0,10) -- [cite: 314]
+    local aimC, aimCT = mkSec("Main Aimbot", aL, 220); mkTog("Enabled", aimC, "aimbot"); -- [cite: 314]
+    mkTog("Visible Only", aimC, "wallCheck"); mkTog("Draw FOV Circle", aimC, "fovEnabled"); mkSli("FOV Radius", aimC, 10, 800, "fovRadius"); -- [cite: 315]
+    mkSli("Smoothing", aimC, 1, 20, "smoothing") -- [cite: 316]
+    local rcsC, rcsCT = mkSec("Weapon Mods", aR, 180); mkTog("No Recoil", rcsC, "recoil"); -- [cite: 316]
+    mkTog("No Spread", rcsC, "spread"); mkTog("Rapid Fire", rcsC, "rapidFireEnabled"); mkBind("Rapid Key", rcsC, "rapidFireKey", "isBindingRapid", "rapidMode") -- [cite: 317]
 
-    local eL = Instance.new("Frame", pages.ESP); eL.Size = UDim2.new(0.48, 0, 1, 0); eL.BackgroundTransparency = 1; Instance.new("UIListLayout", eL).Padding = UDim.new(0,10)
-    local visC, visCT = mkSec("Visuals", eL, 200); mkTog("Chams", visC, "chams"); mkTog("Box ESP", visC, "box"); mkTog("Names", visC, "name"); mkTog("Distance", visC, "distance"); mkTog("Skeletons", visC, "bones"); mkTog("Enemy Only", visC, "enemyOnly")
+    local eL = Instance.new("Frame", pages.ESP); -- [cite: 317, 318]
+    eL.Size = UDim2.new(0.48, 0, 1, 0); eL.BackgroundTransparency = 1; Instance.new("UIListLayout", eL).Padding = UDim.new(0,10) -- [cite: 318]
+    local visC, visCT = mkSec("Visuals", eL, 200); -- [cite: 318, 319]
+    mkTog("Chams", visC, "chams"); mkTog("Box ESP", visC, "box"); mkTog("Names", visC, "name"); mkTog("Distance", visC, "distance"); mkTog("Skeletons", visC, "bones"); -- [cite: 319]
+    mkTog("Enemy Only", visC, "enemyOnly") -- [cite: 320]
 
-    local mL = Instance.new("Frame", pages.Movement); mL.Size = UDim2.new(0.48, 0, 1, 0); mL.BackgroundTransparency = 1; Instance.new("UIListLayout", mL).Padding = UDim.new(0,10)
-    local mR = Instance.new("Frame", pages.Movement); mR.Position = UDim2.new(0.52, 0, 0, 0); mR.Size = UDim2.new(0.48, 0, 1, 0); mR.BackgroundTransparency = 1; Instance.new("UIListLayout", mR).Padding = UDim.new(0,10)
-    local moveC, moveCT = mkSec("Speed Mods", mL, 150); mkTog("Speed Hack", moveC, "speedEnabled"); mkBind("Speed Key", moveC, "speedKey", "isBindingSpeed", "speedMode"); mkSli("Walk Speed", moveC, 16, 200, "walkSpeed")
-    local flyC, flyCT = mkSec("Flight Mods", mR, 150); mkTog("Fly Hack", flyC, "flyEnabled"); mkBind("Fly Key", flyC, "flyKey", "isBindingFly", "flyMode"); mkSli("Fly Speed", flyC, 10, 300, "flySpeed")
+    local mL = Instance.new("Frame", pages.Movement); mL.Size = UDim2.new(0.48, 0, 1, 0); -- [cite: 320, 321]
+    mL.BackgroundTransparency = 1; Instance.new("UIListLayout", mL).Padding = UDim.new(0,10) -- [cite: 321]
+    local mR = Instance.new("Frame", pages.Movement); -- [cite: 321, 322]
+    mR.Position = UDim2.new(0.52, 0, 0, 0); mR.Size = UDim2.new(0.48, 0, 1, 0); mR.BackgroundTransparency = 1; -- [cite: 322]
+    Instance.new("UIListLayout", mR).Padding = UDim.new(0,10) -- [cite: 323]
+    local moveC, moveCT = mkSec("Speed Mods", mL, 180); mkTog("Speed Hack", moveC, "speedEnabled"); -- [cite: 323, 324]
+    mkTog("Bunny Hop", moveC, "bhopEnabled");
+    mkBind("Speed Key", moveC, "speedKey", "isBindingSpeed", "speedMode"); mkSli("Walk Speed", moveC, 16, 200, "walkSpeed") -- [cite: 324]
+    local flyC, flyCT = mkSec("Flight Mods", mR, 150); -- 
+    mkTog("Fly Hack", flyC, "flyEnabled"); mkBind("Fly Key", flyC, "flyKey", "isBindingFly", "flyMode"); -- [cite: 325]
+    mkSli("Fly Speed", flyC, 10, 300, "flySpeed") -- [cite: 326]
 
     -- WORLD PAGE
-    local wL = Instance.new("Frame", pages.World); wL.Size = UDim2.new(0.48, 0, 1, 0); wL.BackgroundTransparency = 1; Instance.new("UIListLayout", wL).Padding = UDim.new(0,10)
-    local skyC, skyCT = mkSec("Atmosphere", wL, 200); mkTog("Custom Skybox", skyC, "skyboxEnabled")
+    local wL = Instance.new("Frame", pages.World); -- [cite: 326, 327]
+    wL.Size = UDim2.new(0.48, 0, 1, 0); wL.BackgroundTransparency = 1; Instance.new("UIListLayout", wL).Padding = UDim.new(0,10) -- [cite: 327]
+    local skyC, skyCT = mkSec("Atmosphere", wL, 200); -- [cite: 327, 328]
+    mkTog("Custom Skybox", skyC, "skyboxEnabled") -- [cite: 328]
     local function mkSkyBtn(name, id)
-        local b = Instance.new("TextButton", skyC); b.Size = UDim2.new(1, 0, 0, 22); b.BackgroundColor3 = Color3.fromRGB(35, 30, 40); b.Text = name; b.TextColor3 = Color3.new(0.8,0.8,0.8); b.Font = "SourceSansBold"; b.TextSize = 14; Instance.new("UICorner", b)
+        local b = Instance.new("TextButton", skyC); -- [cite: 328, 329]
+        b.Size = UDim2.new(1, 0, 0, 22); b.BackgroundColor3 = Color3.fromRGB(35, 30, 40); b.Text = name; b.TextColor3 = Color3.new(0.8,0.8,0.8); b.Font = "SourceSansBold"; -- [cite: 329]
+        b.TextSize = 14; Instance.new("UICorner", b) -- [cite: 330]
         b.MouseButton1Click:Connect(function() state.skyboxId = id end)
     end
     mkSkyBtn("Night Sky", "rbxassetid://159454299")
     mkSkyBtn("Purple Nebula", "rbxassetid://159454222")
     mkSkyBtn("Aesthetic", "rbxassetid://11516082402")
 
-    local sL = Instance.new("Frame", pages.Settings); sL.Size = UDim2.new(0.48, 0, 1, 0); sL.BackgroundTransparency = 1; Instance.new("UIListLayout", sL).Padding = UDim.new(0,10)
-    local setC, setCT = mkSec("Menu Settings", sL, 100); mkBind("Menu Keybind", setC, "menuKey", "isBindingMenu")
-    local colC, colCT = mkSec("Theme Colors", sL, 130)
+    local sL = Instance.new("Frame", pages.Settings); -- [cite: 330, 331]
+    sL.Size = UDim2.new(0.48, 0, 1, 0); sL.BackgroundTransparency = 1; Instance.new("UIListLayout", sL).Padding = UDim.new(0,10) -- [cite: 331]
+    local setC, setCT = mkSec("Menu Settings", sL, 100); -- [cite: 331, 332]
+    mkBind("Menu Keybind", setC, "menuKey", "isBindingMenu") -- [cite: 332]
+    local colC, colCT = mkSec("Theme Colors", sL, 130) -- [cite: 332]
 
     local function mkColBtn(txt, color)
-        local b = Instance.new("TextButton", colC); b.Size = UDim2.new(1, 0, 0, 22); b.BackgroundColor3 = Color3.fromRGB(35, 30, 40); b.Text = txt; b.TextColor3 = color; b.Font = "SourceSansBold"; b.TextSize = 14; Instance.new("UICorner", b)
+        local b = Instance.new("TextButton", colC); -- [cite: 332, 333]
+        b.Size = UDim2.new(1, 0, 0, 22); b.BackgroundColor3 = Color3.fromRGB(35, 30, 40); b.Text = txt; b.TextColor3 = color; b.Font = "SourceSansBold"; -- [cite: 333]
+        b.TextSize = 14; Instance.new("UICorner", b) -- [cite: 334]
         b.MouseButton1Click:Connect(function()
             state.boneColor = color; enterBtn.BackgroundColor3 = color; loginTitle.TextColor3 = color; kbTitle.TextColor3 = color; aimCT.TextColor3 = color; rcsCT.TextColor3 = color; visCT.TextColor3 = color; moveCT.TextColor3 = color; flyCT.TextColor3 = color; skyCT.TextColor3 = color; setCT.TextColor3 = color; colCT.TextColor3 = color
         end)
     end
-    mkColBtn("Bnuuy Purple", Color3.fromRGB(160, 32, 240)); mkColBtn("Baby Blue", Color3.fromRGB(137, 207, 240)); mkColBtn("Baby Pink", Color3.fromRGB(255, 182, 193))
+    mkColBtn("Bnuuy Purple", Color3.fromRGB(160, 32, 240)); -- [cite: 334]
+    mkColBtn("Baby Blue", Color3.fromRGB(137, 207, 240)); mkColBtn("Baby Pink", Color3.fromRGB(255, 182, 193)) -- [cite: 335]
 
     RunService.Heartbeat:Connect(function()
         menuVal.Text = "[" .. state.menuKey.Name .. "]"
@@ -466,9 +587,11 @@ local function makeUI()
         local speedActive = isFeatureActive(state.speedEnabled, state.speedKey, state.speedMode, state.speedToggled)
         speedVal.Text = (speedActive and "[" .. state.speedKey.Name .. "] " or "[OFF] ") .. "(" .. state.speedMode:upper() .. ")"
         local flyActive = isFeatureActive(state.flyEnabled, state.flyKey, state.flyMode, state.flyToggled)
-        flyVal.Text = (flyActive and "[" .. state.flyKey.Name .. "] " or "[OFF] ") .. "(" .. state.flyMode:upper() .. ")"
+        bhopVal.Text = state.bhopEnabled and "[SPACE]" or "[OFF]"
+     
+        flyVal.Text = (flyActive and "[" .. state.flyKey.Name .. "] " or "[OFF] ") .. "(" .. state.flyMode:upper() .. ")" -- [cite: 335, 336]
         local rapidActive = isFeatureActive(state.rapidFireEnabled, state.rapidFireKey, state.rapidMode, state.rapidToggled)
-        rapidVal.Text = (rapidActive and "[" .. state.rapidFireKey.Name .. "] " or "[OFF] ") .. "(" .. state.rapidMode:upper() .. ")"
+        rapidVal.Text = (rapidActive and "[" .. state.rapidFireKey.Name .. "] " or "[OFF] ") .. "(" .. state.rapidMode:upper() .. ")" -- [cite: 336]
     end)
 
     UserInputService.InputBegan:Connect(function(i, g) if not g and i.KeyCode == state.menuKey and state.isLoggedIn then main.Visible = not main.Visible end end)
@@ -480,22 +603,26 @@ makeUI()
 -- =========================
 task.spawn(function()
     while true do
-        local customSky = Lighting:FindFirstChild("BnuuySky")
+    
+        local customSky = Lighting:FindFirstChild("BnuuySky") -- [cite: 337]
         if state.skyboxEnabled and state.isLoggedIn then
             if not customSky then
                 -- Backup originals
                 for _, v in pairs(Lighting:GetChildren()) do if v:IsA("Sky") then v.Parent = nil table.insert(originalSkybox, v) end end
-                customSky = Instance.new("Sky", Lighting); customSky.Name = "BnuuySky"
+                customSky = Instance.new("Sky", Lighting); customSky.Name = "BnuuySky" -- [cite: 337, 338]
             end
             local id = state.skyboxId
-            customSky.SkyboxBk = id; customSky.SkyboxDn = id; customSky.SkyboxFt = id; customSky.SkyboxLf = id; customSky.SkyboxRt = id; customSky.SkyboxUp = id
+            customSky.SkyboxBk = id; -- [cite: 338]
+            customSky.SkyboxDn = id; customSky.SkyboxFt = id; customSky.SkyboxLf = id; customSky.SkyboxRt = id; -- [cite: 339]
+            customSky.SkyboxUp = id -- [cite: 340]
         else
             if customSky then 
                 customSky:Destroy() 
                 for _, v in pairs(originalSkybox) do v.Parent = Lighting end
                 originalSkybox = {}
             end
-        end
+   
+        end -- [cite: 341]
         task.wait(1)
     end
 end)
@@ -513,22 +640,33 @@ RunService.RenderStepped:Connect(function()
         local char = LocalPlayer.Character
         local root = char.HumanoidRootPart
         local hum = char.Humanoid
+     
         local speedActive = isFeatureActive(state.speedEnabled, state.speedKey, state.speedMode, state.speedToggled)
-        hum.WalkSpeed = speedActive and state.walkSpeed or 16
+        hum.WalkSpeed = speedActive and state.walkSpeed or 16 -- [cite: 341, 342]
+        
+        -- Bunny Hop Logic
+        if state.bhopEnabled and UserInputService:IsKeyDown(Enum.KeyCode.Space) then
+            if hum.FloorMaterial ~= Enum.Material.Air then
+                hum:ChangeState(Enum.HumanoidStateType.Jumping)
+            end
+        end
+
         local flyActive = isFeatureActive(state.flyEnabled, state.flyKey, state.flyMode, state.flyToggled)
         if flyActive then
             hum.PlatformStand = true
             local moveDir = hum.MoveDirection
             local flyVec = Vector3.new(0,0,0)
-            if UserInputService:IsKeyDown(Enum.KeyCode.Space) then flyVec = flyVec + Vector3.new(0,1,0) end
+         
+            if UserInputService:IsKeyDown(Enum.KeyCode.Space) then flyVec = flyVec + Vector3.new(0,1,0) end -- 
             if UserInputService:IsKeyDown(Enum.KeyCode.LeftControl) then flyVec = flyVec + Vector3.new(0,-1,0) end
-            root.Velocity = (moveDir * state.flySpeed) + (flyVec * state.flySpeed)
+            root.Velocity = (moveDir * state.flySpeed) + (flyVec * state.flySpeed) -- [cite: 343]
         else
             hum.PlatformStand = false
         end
     end
 
-    fovCircle.Visible = state.fovEnabled; fovCircle.Radius = state.fovRadius; fovCircle.Color = state.boneColor; fovCircle.Position = UserInputService:GetMouseLocation()
+    fovCircle.Visible = state.fovEnabled; -- [cite: 343]
+    fovCircle.Radius = state.fovRadius; fovCircle.Color = state.boneColor; fovCircle.Position = UserInputService:GetMouseLocation() -- [cite: 344]
 
     -- AIMBOT 
     if state.aimbot and UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton2) then
@@ -537,42 +675,57 @@ RunService.RenderStepped:Connect(function()
             local part = currentTarget.Character:FindFirstChild(state.aimPart)
             if part then Camera.CFrame = Camera.CFrame:Lerp(CFrame.new(Camera.CFrame.Position, part.Position), 1/state.smoothing) end
         end
-    else currentTarget = nil end
+   
+    else currentTarget = nil end -- [cite: 344, 345]
 
     for _, p in ipairs(Players:GetPlayers()) do
         if p ~= LocalPlayer then
             if isAlive(p) then
                 applyVisuals(p)
                 if state.bones and (not state.enemyOnly or not sameTeam(p)) then
-                    setupBones(p); local limbs = bonesData[p].limbs
+                    
+                    setupBones(p); local limbs = bonesData[p].limbs -- [cite: 345, 346]
                     local function connect(l, p1, p2)
                         local pt1, pt2 = p.Character:FindFirstChild(p1), p.Character:FindFirstChild(p2)
                         if pt1 and pt2 then
-                            local v1, on1 = Camera:WorldToViewportPoint(pt1.Position); local v2, on2 = Camera:WorldToViewportPoint(pt2.Position)
+               
+                            local v1, on1 = Camera:WorldToViewportPoint(pt1.Position); -- [cite: 346, 347]
+                            local v2, on2 = Camera:WorldToViewportPoint(pt2.Position) -- [cite: 348]
                             if on1 and on2 then 
-                                l.Visible = true; l.From = Vector2.new(v1.X, v1.Y); l.To = Vector2.new(v2.X, v2.Y); l.Color = state.boneColor; return 
+                                l.Visible = true; -- [cite: 348]
+                                l.From = Vector2.new(v1.X, v1.Y); l.To = Vector2.new(v2.X, v2.Y); l.Color = state.boneColor; -- [cite: 349]
+                                return -- [cite: 350]
                             end
                         end
                         l.Visible = false
                     end
-                    connect(limbs.H_UT, "Head", "UpperTorso"); connect(limbs.UT_LT, "UpperTorso", "LowerTorso")
-                    connect(limbs.UT_LUA, "UpperTorso", "LeftUpperArm"); connect(limbs.LUA_LLA, "LeftUpperArm", "LeftLowerArm")
-                    connect(limbs.UT_RUA, "UpperTorso", "RightUpperArm"); connect(limbs.RUA_RLA, "RightUpperArm", "RightLowerArm")
-                    connect(limbs.LT_LUL, "LowerTorso", "LeftUpperLeg"); connect(limbs.LUL_LLL, "LeftUpperLeg", "LeftLowerLeg")
-                    connect(limbs.LT_RUL, "LowerTorso", "RightUpperLeg"); connect(limbs.RUL_RLL, "RightUpperLeg", "RightLowerLeg")
+ 
+                    connect(limbs.H_UT, "Head", "UpperTorso"); -- [cite: 350, 351]
+                    connect(limbs.UT_LT, "UpperTorso", "LowerTorso") -- [cite: 352]
+                    connect(limbs.UT_LUA, "UpperTorso", "LeftUpperArm");
+                    connect(limbs.LUA_LLA, "LeftUpperArm", "LeftLowerArm") -- [cite: 353]
+                    connect(limbs.UT_RUA, "UpperTorso", "RightUpperArm");
+                    connect(limbs.RUA_RLA, "RightUpperArm", "RightLowerArm") -- [cite: 354]
+                    connect(limbs.LT_LUL, "LowerTorso", "LeftUpperLeg");
+                    connect(limbs.LUL_LLL, "LeftUpperLeg", "LeftLowerLeg") -- [cite: 355]
+                    connect(limbs.LT_RUL, "LowerTorso", "RightUpperLeg");
+                    connect(limbs.RUL_RLL, "RightUpperLeg", "RightLowerLeg") -- [cite: 356]
                 elseif bonesData[p] then for _,l in pairs(bonesData[p].limbs) do l.Visible = false end end
             else
                 if bonesData[p] then for _,l in pairs(bonesData[p].limbs) do l.Visible = false end end
                 local char = p.Character
-                if char then
+           
+                if char then -- [cite: 356, 357]
                     local root = char:FindFirstChild("HumanoidRootPart")
                     if root then
                         if root:FindFirstChild("BnuuyBox") then root.BnuuyBox.Enabled = false end
-                        if root:FindFirstChild("BnuuyName") then root.BnuuyName.Enabled = false end
+                  
+                        if root:FindFirstChild("BnuuyName") then root.BnuuyName.Enabled = false end -- [cite: 357, 358]
                         if root:FindFirstChild("BnuuyDistance") then root.BnuuyDistance.Enabled = false end
                     end
                     if char:FindFirstChild("BnuuyChams") then char.BnuuyChams.Enabled = false end
-                end
+            
+                end -- [cite: 359]
             end
         end
     end
